@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Contact Form</title>
+</head>
+<body>
+  <form id="contactForm">
+    <input type="text" id="homegreen" placeholder="First Contact Info" required><br>
+    <input type="text" id="homered" placeholder="Second Contact Info" required><br>
+    <label>
+      <input type="checkbox" id="consent" required>
+      I agree to the privacy policy.
+    </label><br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const homegreen = document.getElementById('homegreen').value;
+      const homered = document.getElementById('homered').value;
+      const consent = document.getElementById('consent').checked;
+
+      if (!consent) {
+        alert('You must agree to the privacy policy.');
+        return;
+      }
+
+      const res = await fetch('/api/send', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ homegreen, homered })
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        alert('Form sent successfully!');
+      } else {
+        alert('Failed: ' + data.message);
+      }
+    });
+  </script>
+</body>
+</html>
